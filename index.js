@@ -1,31 +1,44 @@
+
 function generateRandomColor() {
-    return '#' + Math.floor(Math.random()*16777215).toString(16);
+    return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const colorContainer = document.querySelector('.flex.items-center');
+    const colorContainer = document.querySelector('.color-container');
     const generateBtn = document.getElementById('generate-btn');
 
     generateBtn.addEventListener('click', () => {
         const colors = [];
-        for (let i = 0; i < 5; i++) {
+        const colorCodes = [];
+        for (let i = 0; i < 16; i++) { 
             let color = generateRandomColor();
             while (colors.includes(color)) {
                 color = generateRandomColor();
             }
             colors.push(color);
+            colorCodes.push(color);
         }
 
         colorContainer.innerHTML = '';
-        colors.forEach((color, index) => {
+        colorCodes.forEach((color, index) => {
             const swatch = document.createElement('div');
-            swatch.className = `w-44 h-56 bg-color-${index + 1} m-2`;
+            swatch.className = `flex flex-col items-center justify-center w-24 h-24 rounded-lg border-4 border-gray-200 cursor-pointer mr-4 mb-4`;
             swatch.style.backgroundColor = color;
-            colorContainer.appendChild(swatch);
+            swatch.addEventListener('click', () => {
+                navigator.clipboard.writeText(color);
+                alert(`Color ${color} copied to clipboard!`);
+            });
 
-            document.styleSheets[0].addRule(`.color-${index + 1}`, `background-color: ${color}`);
+            const colorCode = document.createElement('p');
+            colorCode.textContent = color;
+            colorCode.className = "text-sm text-gray-700";
+
+            swatch.appendChild(colorCode);
+            colorContainer.appendChild(swatch);
         });
     });
 
     generateBtn.click();
 });
+
+
